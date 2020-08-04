@@ -4,7 +4,9 @@ import morgan from 'morgan';
 import { Connection } from 'typeorm';
 
 import config from './config';
+import './redis';
 import connectDatabase from './database';
+
 import router from './routes';
 import error from './middlewares/error';
 
@@ -24,6 +26,7 @@ connectDatabase().then(async (connection: Connection) => {
   }
 
   app.use('/', router);
+  app.use(express.static('public'));
 
   app.use(error);
 

@@ -16,7 +16,7 @@ export class User {
   @Column({ type: 'varchar', unique: true })
   email!: string;
 
-  @Column({ type: 'varchar' })
+  @Column({ type: 'varchar', select: false })
   password!: string;
 
   @Column({ default: '' })
@@ -34,7 +34,7 @@ export class User {
   @CreateDateColumn()
   createdAt!: Date;
 
-  @OneToMany(() => Post, (post) => post.user)
+  @OneToMany((type) => Post, (post) => post.user)
   posts!: Post[];
 
   @BeforeInsert()

@@ -5,7 +5,6 @@ export default async function connectDatabase(): Promise<Connection> {
   const connectionOptions: ConnectionOptions = await getConnectionOptions();
 
   Object.assign(connectionOptions, {
-    logging: process.env.NODE_ENV !== 'production', // Turn this to `false` to turn off TypeORM SQL logger
     synchronize: true,
   } as ConnectionOptions);
 

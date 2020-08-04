@@ -2,8 +2,9 @@ import bcrypt from 'bcrypt';
 import { RequestHandler, Request, Response, NextFunction } from 'express';
 import { getRepository } from 'typeorm';
 import { User } from '../entities';
-import { verifyRefreshToken, generateTokens, generateAccessToken } from '../utils/jwt';
+import { verifyRefreshToken, generateTokens, generateAccessToken, verifyAccessToken } from '../utils/jwt';
 import createHttpError from '../utils/httpError';
+import redisClient from '../redis';
 
 /**
  * Login
@@ -15,25 +16,19 @@ export const login: RequestHandler = async (req: Request, res: Response, next: N
     const repository = getRepository<User>(User);
     const { username, email, password } = req.body;
 
-    const user = await repository.findOne({ where: email ? { email } : { username } });
+    const user = await repository.findOne({ where: email ? { email } : { username }, select: ['id', 'password'] });
 
     if (!user) {
-      res.status(401).json({
-        message: 'Invalid credentials provided',
-      });
-      return;
+      return next(createHttpError(401, 'Invalid credentials provided'));
     }
 
     const compare = await bcrypt.compare(password, user.password);
 
     if (!compare) {
-      res.status(401).json({
-        message: 'Invalid credentials provided',
-      });
-      return;
+      return next(createHttpError(401, 'Invalid credentials provided'));
     }
 
-    const [accessToken, refreshToken] = generateTokens(user.id);
+    const [accessToken, refreshToken] = await generateTokens(user.id);
 
     res.json({
       message: 'Successfully logged in',
@@ -41,6 +36,7 @@ export const login: RequestHandler = async (req: Request, res: Response, next: N
       refreshToken,
     });
   } catch (error) {
+    console.log(error);
     next(createHttpError(500, 'There was a problem on our side'));
   }
 };
@@ -59,17 +55,11 @@ export const register: RequestHandler = async (req: Request, res: Response, next
     const emailExists = await repository.findOne({ username });
 
     if (usernameExists) {
-      res.status(409).json({
-        message: 'Username has already been taken',
-      });
-      return;
+      return next(createHttpError(409, 'Username has already been taken'));
     }
 
     if (emailExists) {
-      res.status(409).json({
-        message: 'Email address has already been taken',
-      });
-      return;
+      return next(createHttpError(409, 'Email address has already been taken'));
     }
 
     const newUser = repository.create();
@@ -85,7 +75,7 @@ export const register: RequestHandler = async (req: Request, res: Response, next
 
     const savedUser = await repository.save(newUser);
 
-    const [accessToken, refreshToken] = generateTokens(savedUser.id);
+    const [accessToken, refreshToken] = await generateTokens(savedUser.id);
 
     res.json({
       message: 'Successfully registered a new account',
@@ -106,7 +96,11 @@ export const verify: RequestHandler = async (req: Request, res: Response, next: 
   try {
     const { refreshToken } = req.body;
 
-    const payload = verifyRefreshToken(refreshToken);
+    const payload = await verifyRefreshToken(refreshToken);
+
+    if (!payload) {
+      return next(createHttpError(401, 'Please login and try again'));
+    }
 
     const accessToken = generateAccessToken(payload.userId);
 
@@ -116,4 +110,52 @@ export const verify: RequestHandler = async (req: Request, res: Response, next: 
   }
 };
 
-export default { login, register, verify };
+/**
+ * User's details
+ *
+ * @POST /auth/me
+ * */
+export const me: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const repository = getRepository<User>(User);
+
+    const payload = verifyAccessToken(res.locals.accessToken);
+
+    if (!payload) {
+      return next(createHttpError(401, 'Please login and try again'));
+    }
+
+    const user = await repository.findOne(payload.userId);
+
+    res.json(user);
+  } catch (error) {
+    next(createHttpError(401, 'Please login and try again'));
+  }
+};
+
+/**
+ * Logout the user by blacklisting the user's refresh token
+ *
+ * @POST /auth/logout
+ * */
+export const logout: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { refreshToken } = req.body;
+
+    const payload = await verifyRefreshToken(refreshToken);
+
+    if (!payload) {
+      return next(createHttpError(401, 'Please login and try again'));
+    }
+
+    await redisClient.del(payload.userId);
+
+    res.json({
+      message: 'Successfully logged out',
+    });
+  } catch (error) {
+    next(createHttpError(401, 'Please login and try again'));
+  }
+};
+
+export default { login, register, verify, me, logout };

@@ -7,17 +7,17 @@ export class Post {
   id!: number;
 
   @Column({ type: 'varchar' })
-  img!: string;
+  image!: string;
 
   @Column({ type: 'varchar', length: 300 })
   caption!: string;
 
-  @Column({ type: 'varchar' })
-  location!: string;
+  @Column({ type: 'varchar', default: '' })
+  location?: string;
 
   @CreateDateColumn()
   createdAt!: Date;
 
-  @ManyToOne(() => User, (user) => user.posts)
+  @ManyToOne((type) => User, (user) => user.posts)
   user!: User;
 }

@@ -17,6 +17,8 @@ const envSchema = Joi.object({
   TYPEORM_ENTITIES_DIR: Joi.string().required(),
   TYPEORM_MIGRATIONS: Joi.string().required(),
   TYPEORM_MIGRATIONS_DIR: Joi.string().required(),
+  REDIS_HOST: Joi.string().required(),
+  REDIS_PORT: Joi.string().required(),
 }).unknown(true);
 
 const validate = envSchema.validate(process.env);
@@ -27,7 +29,7 @@ if (validate.error) {
 
 const options = {
   port: process.env.PORT,
-  storageDir: path.normalize(path.join(__dirname, '../src/storage')),
+  storageDir: path.normalize(path.join(__dirname, '../../public/uploads')),
   jwt: {
     accessTokenSecret: process.env.ACCESS_TOKEN_SECRET,
     refreshTokenSecret: process.env.REFRESH_TOKEN_SECRET,
