@@ -1,6 +1,7 @@
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, OneToMany, BeforeInsert } from 'typeorm';
 import bcrypt from 'bcrypt';
 import { Post } from './post';
+import { Comment } from './comment';
 
 @Entity({ name: 'users' })
 export class User {
@@ -36,6 +37,9 @@ export class User {
 
   @OneToMany((type) => Post, (post) => post.user)
   posts!: Post[];
+
+  @OneToMany((type) => Comment, (comment) => comment.user)
+  comments!: Comment[];
 
   @BeforeInsert()
   async hashPassword(): Promise<void> {

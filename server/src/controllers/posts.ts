@@ -5,6 +5,7 @@ import del from 'del';
 import config from '../config';
 import { Post, User } from '../entities';
 import createHttpError from '../utils/httpError';
+import { Comment } from '../entities/comment';
 
 /**
  * Lists all the posts
@@ -16,7 +17,7 @@ export const index: RequestHandler = async (req: Request, res: Response, next: N
     const repository = getRepository<Post>(Post);
 
     const posts = await repository.find({
-      relations: ['user'],
+      relations: ['user', 'comments', 'comments.user'],
       order: {
         createdAt: 'DESC',
       },
@@ -40,7 +41,7 @@ export const show: RequestHandler = async (req: Request, res: Response, next: Ne
   try {
     const repository = getRepository<Post>(Post);
 
-    const post = await repository.findOne(req.params.id, { relations: ['user'] });
+    const post = await repository.findOne(req.params.id, { relations: ['user', 'comments', 'comments.user'] });
 
     if (!post) {
       return next(createHttpError(404, 'Post not found'));
@@ -74,7 +75,7 @@ export const store: RequestHandler = async (req: Request, res: Response, next: N
     newPost.location = location;
     newPost.user = user;
 
-    const savedPost = postRepository.save(newPost);
+    const savedPost = await postRepository.save(newPost);
 
     return res.json({
       message: 'Successfully posted a new post',
@@ -149,4 +150,38 @@ export const destroy: RequestHandler = async (req: Request, res: Response, next:
   }
 };
 
-export default { index, show, store, update, destroy };
+/**
+ * Creates a new comment on a post
+ *
+ * @GET - /posts/:id/comments
+ */
+export const storeComment: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const postRepository = getRepository<Post>(Post);
+    const commentRepository = getRepository<Comment>(Comment);
+    const { content } = req.body;
+
+    const post = await postRepository.findOne(req.params.id);
+
+    if (!post) {
+      return next(createHttpError(404, 'Post not found'));
+    }
+
+    const newComment = commentRepository.create();
+
+    newComment.content = content;
+    newComment.post = post;
+    newComment.user = res.locals.userId;
+
+    const savedComment = await commentRepository.save(newComment);
+
+    res.json({
+      message: 'Successfully posted a new comment',
+      comment: savedComment,
+    });
+  } catch (error) {
+    next(createHttpError(500, 'There was a problem on our side'));
+  }
+};
+
+export default { index, show, store, update, destroy, storeComment };

@@ -23,5 +23,6 @@ router.get('/posts/:id', posts.show);
 router.post('/posts', authorized, upload.single('image'), posts.store);
 router.put('/posts/:id', authorized, posts.update);
 router.delete('/posts/:id', authorized, posts.destroy);
+router.post('/posts/:id/comments', authorized, posts.storeComment);
 
 export default router;
