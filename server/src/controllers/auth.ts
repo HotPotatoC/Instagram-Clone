@@ -49,7 +49,7 @@ export const login: RequestHandler = async (req: Request, res: Response, next: N
 export const register: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const repository = getRepository<User>(User);
-    const { displayName, username, email, password, avatarImg, bio, website, location } = req.body;
+    const { displayName, username, email, password, bio, website, location } = req.body;
 
     const usernameExists = await repository.findOne({ username });
     const emailExists = await repository.findOne({ username });
@@ -68,7 +68,7 @@ export const register: RequestHandler = async (req: Request, res: Response, next
     newUser.username = username;
     newUser.email = email;
     newUser.password = password;
-    newUser.avatarImg = avatarImg;
+    newUser.avatarImg = req.file.filename;
     newUser.bio = bio;
     newUser.website = website;
     newUser.location = location;

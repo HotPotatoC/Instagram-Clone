@@ -36,7 +36,6 @@ export const show: RequestHandler = async (req: Request, res: Response, next: Ne
       where: {
         username: req.params.username,
       },
-      select: ['id', 'displayName', 'username', 'email', 'bio', 'location', 'website', 'createdAt'],
     });
 
     if (!user) {

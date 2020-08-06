@@ -17,6 +17,9 @@ export const index: RequestHandler = async (req: Request, res: Response, next: N
 
     const posts = await repository.find({
       relations: ['user'],
+      order: {
+        createdAt: 'DESC',
+      },
     });
 
     res.json({

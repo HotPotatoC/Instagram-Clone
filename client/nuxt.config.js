@@ -34,12 +34,12 @@ export default {
    ** Plugins to load before mounting the App
    ** https://nuxtjs.org/guide/plugins
    */
-  plugins: [],
+  plugins: ['~/plugins/vue-moment'],
   /*
    ** Auto import components
    ** See https://nuxtjs.org/api/configuration-components
    */
-  components: true,
+  components: ['~/components/common'],
   /*
    ** Nuxt.js dev-modules
    */
@@ -55,15 +55,61 @@ export default {
     // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/axios',
     '@nuxtjs/pwa',
+    '@nuxtjs/auth-next',
   ],
   /*
    ** Axios module configuration
    ** See https://axios.nuxtjs.org/options
    */
-  axios: {},
+  axios: {
+    baseURL: 'http://localhost:5000',
+  },
   /*
    ** Build configuration
    ** See https://nuxtjs.org/api/configuration-build/
    */
   build: {},
+  auth: {
+    strategies: {
+      local: {
+        scheme: 'refresh',
+        token: {
+          property: 'accessToken',
+          type: 'Bearer',
+          maxAge: 5 * 60,
+        },
+        refreshToken: {
+          property: 'refreshToken',
+          data: 'refreshToken',
+          maxAge: 7 * 24 * 60 * 60,
+        },
+        user: {
+          property: false,
+        },
+        endpoints: {
+          login: {
+            url: '/auth/login',
+            method: 'post',
+            propertyName: 'accessToken',
+            refreshToken: 'refreshToken',
+          },
+          refresh: {
+            url: '/auth/verify',
+            method: 'post',
+          },
+          logout: {
+            url: '/auth/logout',
+            method: 'post',
+          },
+          user: {
+            url: '/auth/me',
+            method: 'get',
+          },
+        },
+      },
+    },
+  },
+  env: {
+    storageURL: 'http://localhost:5000/uploads/',
+  },
 }
