@@ -3,9 +3,7 @@ import { Router } from 'express';
 import upload from './middlewares/multer';
 import authorized from './middlewares/authorized';
 
-import auth from './controllers/auth';
-import users from './controllers/users';
-import posts from './controllers/posts';
+import { auth, posts, users } from './controllers';
 
 const router: Router = Router();
 
