@@ -1,7 +1,20 @@
 import { Request, Response, RequestHandler, NextFunction } from 'express';
 import { getRepository } from 'typeorm';
+import Joi from 'joi';
 import { User } from '../entities';
 import createHttpError from '../utils/httpError';
+
+export const validationSchemas = {
+  update: Joi.object({
+    displayName: Joi.string().optional(),
+    username: Joi.string().optional(),
+    email: Joi.string().optional(),
+    avatarImg: Joi.string().optional(),
+    bio: Joi.string().optional(),
+    location: Joi.string().optional(),
+    website: Joi.string().uri().optional(),
+  }),
+};
 
 /**
  * lists all users

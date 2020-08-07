@@ -5,6 +5,31 @@ import { User } from '../entities';
 import { verifyRefreshToken, generateTokens, generateAccessToken, verifyAccessToken } from '../utils/jwt';
 import createHttpError from '../utils/httpError';
 import redisClient from '../redis';
+import Joi from 'joi';
+
+export const validationSchemas = {
+  login: Joi.object({
+    username: Joi.string().max(32),
+    email: Joi.string().email().lowercase(),
+    password: Joi.string().required(),
+  }).xor('username', 'email'),
+  register: Joi.object({
+    displayName: Joi.string().max(32).default(''),
+    username: Joi.string().max(32).required(),
+    email: Joi.string().email().lowercase().required(),
+    password: Joi.string().min(6).required(),
+    avatarImg: Joi.required(),
+    bio: Joi.string().default(''),
+    website: Joi.string().uri().default(''),
+    location: Joi.string().default(''),
+  }).xor('username', 'email'),
+  verify: Joi.object({
+    refreshToken: Joi.string().required(),
+  }),
+  logout: Joi.object({
+    refreshToken: Joi.string().required(),
+  }),
+};
 
 /**
  * Login
@@ -36,7 +61,6 @@ export const login: RequestHandler = async (req: Request, res: Response, next: N
       refreshToken,
     });
   } catch (error) {
-    console.log(error);
     next(createHttpError(500, 'There was a problem on our side'));
   }
 };
@@ -158,4 +182,4 @@ export const logout: RequestHandler = async (req: Request, res: Response, next: 
   }
 };
 
-export default { login, register, verify, me, logout };
+export default { login, register, verify, me, logout, validationSchemas };

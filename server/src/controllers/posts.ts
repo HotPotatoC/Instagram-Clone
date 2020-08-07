@@ -1,11 +1,26 @@
 import { Request, Response, RequestHandler, NextFunction } from 'express';
 import { getRepository } from 'typeorm';
+import Joi from 'joi';
 import del from 'del';
 
 import config from '../config';
 import { Post, User } from '../entities';
 import createHttpError from '../utils/httpError';
 import { Comment } from '../entities/comment';
+
+export const validationSchemas = {
+  store: Joi.object({
+    caption: Joi.string().max(300).required(),
+    location: Joi.string().required(),
+  }).allow('image'),
+  storeComment: Joi.object({
+    content: Joi.string().max(300).required(),
+  }),
+  update: Joi.object({
+    caption: Joi.string().max(300).required(),
+    location: Joi.string().required(),
+  }),
+};
 
 /**
  * Lists all the posts
@@ -184,4 +199,4 @@ export const storeComment: RequestHandler = async (req: Request, res: Response, 
   }
 };
 
-export default { index, show, store, update, destroy, storeComment };
+export default { index, show, store, update, destroy, storeComment, validationSchemas };
