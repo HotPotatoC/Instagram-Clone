@@ -112,4 +112,7 @@ export default {
   publicRuntimeConfig: {
     storageURL: 'http://localhost:5000/uploads/',
   },
+  loading: {
+    color: '#63B3ED',
+  },
 }
