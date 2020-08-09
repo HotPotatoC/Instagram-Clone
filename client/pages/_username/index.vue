@@ -4,11 +4,11 @@
     <Container class="mt-24">
       <div v-if="ready" class="flex flex-wrap">
         <div class="w-full">
-          <ProfileDetails :user="user"></ProfileDetails>
+          <ProfileDetails :user="user" />
         </div>
         <hr class="w-full mt-32 border border-gray-400" />
         <div class="w-full mt-12">
-          <ProfilePosts :posts="posts"></ProfilePosts>
+          <ProfilePosts :posts="posts" />
         </div>
       </div>
     </Container>

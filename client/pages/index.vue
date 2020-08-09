@@ -5,7 +5,7 @@
       <div v-if="ready" class="flex flex-wrap">
         <div class="w-full md:w-2/3">
           <div v-for="post in posts" :key="post.id" class="mb-10">
-            <Post :post="post" />
+            <PostCard :post="post" />
           </div>
         </div>
         <div class="pl-4 hidden md:block md:w-1/3">
@@ -22,14 +22,14 @@ import Vue from 'vue'
 // @ts-ignore-next-line
 import { Fragment } from 'vue-fragment'
 
-import Post from '~/components/home/Post.vue'
+import PostCard from '~/components/home/PostCard.vue'
 import ProfileCard from '~/components/home/ProfileCard.vue'
 import AuthCard from '~/components/home/AuthCard.vue'
 
 export default Vue.extend({
   components: {
     Fragment,
-    Post,
+    PostCard,
     ProfileCard,
     AuthCard,
   },
