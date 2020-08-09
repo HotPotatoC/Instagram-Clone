@@ -3,12 +3,15 @@
     <Navbar />
     <Container class="mt-24">
       <div v-if="ready" class="flex flex-wrap">
-        <div class="w-full md:w-3/4">
+        <div class="w-full md:w-2/3">
           <div v-for="post in posts" :key="post.id" class="mb-10">
             <Post :post="post" />
           </div>
         </div>
-        <div class="hidden md:block md:w-1/4"></div>
+        <div class="pl-4 hidden md:block md:w-1/3">
+          <ProfileCard v-if="$auth.loggedIn" />
+          <AuthCard v-else />
+        </div>
       </div>
     </Container>
   </Fragment>
@@ -20,11 +23,15 @@ import Vue from 'vue'
 import { Fragment } from 'vue-fragment'
 
 import Post from '~/components/home/Post.vue'
+import ProfileCard from '~/components/home/ProfileCard.vue'
+import AuthCard from '~/components/home/AuthCard.vue'
 
 export default Vue.extend({
   components: {
     Fragment,
     Post,
+    ProfileCard,
+    AuthCard,
   },
   async asyncData({ $axios }) {
     const posts = await $axios.get('/posts')

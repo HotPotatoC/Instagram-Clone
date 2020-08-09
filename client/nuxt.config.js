@@ -109,7 +109,7 @@ export default {
       },
     },
   },
-  env: {
+  publicRuntimeConfig: {
     storageURL: 'http://localhost:5000/uploads/',
   },
 }

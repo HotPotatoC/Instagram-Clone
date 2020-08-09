@@ -4,14 +4,18 @@
       <div class="flex justify-between items-center space-x-6">
         <img
           class="rounded-full h-12 object-cover"
-          :src="`${storageURL}${post.user.avatarImg}`"
+          :src="`${$config.storageURL}${post.user.avatarImg}`"
           :alt="post.user.username"
         />
         <p class="text-base">{{ post.user.username }}</p>
       </div>
       <MoreHorizontalIcon />
     </div>
-    <img class="w-full" :src="`${storageURL}${post.image}`" :alt="post.id" />
+    <img
+      class="w-full"
+      :src="`${$config.storageURL}${post.image}`"
+      :alt="post.id"
+    />
     <div class="flex justify-between items-center p-4">
       <div class="flex justify-between items-center space-x-4">
         <HeartIcon />
@@ -58,12 +62,5 @@ export default Vue.extend({
       required: true,
     } as PropOptions<Post[]>,
   },
-  data() {
-    return {
-      storageURL: process.env.storageURL,
-    }
-  },
 })
 </script>
-
-<style></style>

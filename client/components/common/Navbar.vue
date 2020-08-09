@@ -13,7 +13,7 @@
           <nuxt-link v-if="$auth.loggedIn" :to="`/${$auth.user.username}`">
             <img
               class="rounded-full h-8 object-cover"
-              :src="`${storageURL}${$auth.user.avatarImg}`"
+              :src="`${$config.storageURL}${$auth.user.avatarImg}`"
               :alt="$auth.user.username"
             />
           </nuxt-link>
