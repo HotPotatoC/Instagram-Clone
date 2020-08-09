@@ -46,10 +46,19 @@ export default Vue.extend({
     ProfileDetailsPlaceholder,
   },
   async fetch() {
-    const user = await this.$axios.get(`/users/${this.$route.params.username}`)
-    const posts = await this.$axios.get('/posts')
-    this.user = user.data
-    this.posts = posts.data.items
+    try {
+      const user = await this.$axios.get(
+        `/users/${this.$route.params.username}`
+      )
+      const posts = await this.$axios.get('/posts')
+      this.user = user.data
+      this.posts = posts.data.items
+    } catch (error) {
+      this.$nuxt.error({
+        statusCode: 404,
+        message: 'User not found',
+      })
+    }
   },
   data() {
     return {
