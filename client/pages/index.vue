@@ -47,7 +47,7 @@ export default Vue.extend({
   },
   head() {
     return {
-      title: 'Instagram',
+      title: 'Home',
     }
   },
 })

@@ -68,6 +68,18 @@ export default Vue.extend({
       }
     },
   },
+  head() {
+    return {
+      title: 'Login',
+      meta: [
+        {
+          hid: 'description',
+          name: 'description',
+          content: 'Login to Instagram',
+        },
+      ],
+    }
+  },
 })
 </script>
 
