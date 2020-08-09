@@ -34,7 +34,7 @@ export default {
    ** Plugins to load before mounting the App
    ** https://nuxtjs.org/guide/plugins
    */
-  plugins: ['~/plugins/vue-moment'],
+  plugins: ['~/plugins/vue-content-placeholder', '~/plugins/vue-moment'],
   /*
    ** Auto import components
    ** See https://nuxtjs.org/api/configuration-components
