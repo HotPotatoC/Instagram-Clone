@@ -6,9 +6,9 @@
           <h1 class="text-2xl">Instagram</h1>
         </nuxt-link>
         <div class="flex justify-between items-center space-x-6">
-          <HomeIcon />
-          <SendIcon />
-          <CompassIcon />
+          <nuxt-link to="/">
+            <HomeIcon />
+          </nuxt-link>
           <HeartIcon />
           <nuxt-link v-if="$auth.loggedIn" :to="`/${$auth.user.username}`">
             <img
@@ -25,15 +25,13 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import { CompassIcon, HeartIcon, HomeIcon, SendIcon } from 'vue-feather-icons'
+import { HeartIcon, HomeIcon } from 'vue-feather-icons'
 
 export default Vue.extend({
   name: 'Navbar',
   components: {
-    CompassIcon,
     HeartIcon,
     HomeIcon,
-    SendIcon,
   },
   data() {
     return {
