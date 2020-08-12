@@ -1,19 +1,17 @@
 <template>
   <div class="bg-white border rounded-lg overflow-hidden">
     <div class="flex justify-between items-center p-4">
-      <div class="flex justify-between items-center space-x-6">
-        <nuxt-link
-          :to="`/${post.user.username}`"
-          class="flex justify-between items-center space-x-6"
-        >
-          <img
-            class="rounded-full h-12 object-cover"
-            :src="`${$config.storageURL}${post.user.avatarImg}`"
-            :alt="post.user.username"
-          />
-          <p class="text-base">{{ post.user.username }}</p>
-        </nuxt-link>
-      </div>
+      <nuxt-link
+        :to="`/${post.user.username}`"
+        class="flex justify-between items-center space-x-6"
+      >
+        <img
+          class="rounded-full h-12 object-cover"
+          :src="`${$config.storageURL}${post.user.avatarImg}`"
+          :alt="post.user.username"
+        />
+        <p class="text-base">{{ post.user.username }}</p>
+      </nuxt-link>
       <MoreHorizontalIcon />
     </div>
     <nuxt-link :to="`/post/${post.id}`">
@@ -46,19 +44,8 @@
         >
       </p>
     </div>
-    <div class="px-4">
-      <nuxt-link :to="`/post/${post.id}`">
-        <p class="font-light text-gray-600">
-          View all {{ post.comments.length }} comments
-        </p>
-      </nuxt-link>
-    </div>
     <div v-if="post.comments.length > 0" class="w-full px-4 pb-2">
-      <div
-        v-for="comment in post.comments.slice(0, 2)"
-        :key="comment.id"
-        class="my-2"
-      >
+      <div v-for="comment in post.comments" :key="comment.id" class="my-2">
         <p class="break-words">
           <span class="font-semibold mr-2">{{ comment.user.username }}</span
           >{{ comment.content }}
