@@ -15,8 +15,6 @@ const envSchema = Joi.object({
   TYPEORM_DATABASE: Joi.string().required(),
   TYPEORM_ENTITIES: Joi.string().required(),
   TYPEORM_ENTITIES_DIR: Joi.string().required(),
-  TYPEORM_MIGRATIONS: Joi.string().required(),
-  TYPEORM_MIGRATIONS_DIR: Joi.string().required(),
   REDIS_HOST: Joi.string().required(),
   REDIS_PORT: Joi.string().required(),
 }).unknown(true);
