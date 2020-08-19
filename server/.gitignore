@@ -4,5 +4,7 @@ node_modules
 
 .env
 
+dist
+
 public/uploads/**
 !public/uploads/.gitkeep
