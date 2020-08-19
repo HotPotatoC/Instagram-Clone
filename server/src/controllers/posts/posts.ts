@@ -3,10 +3,10 @@ import { getRepository } from 'typeorm';
 import Joi from 'joi';
 import del from 'del';
 
-import config from '../config';
-import { Post, User } from '../entities';
-import createHttpError from '../utils/httpError';
-import { Comment } from '../entities/comment';
+import config from '../../config';
+import { Post, User } from '../../entities';
+import createHttpError from '../../utils/httpError';
+import { Comment } from '../../entities/comment';
 
 export const validationSchemas = {
   store: Joi.object({
@@ -32,7 +32,7 @@ export const index: RequestHandler = async (req: Request, res: Response, next: N
     const repository = getRepository<Post>(Post);
 
     const posts = await repository.find({
-      relations: ['user', 'comments', 'comments.user'],
+      relations: ['user', 'comments', 'comments.user', 'likes'],
       order: {
         createdAt: 'DESC',
       },
@@ -56,7 +56,9 @@ export const show: RequestHandler = async (req: Request, res: Response, next: Ne
   try {
     const repository = getRepository<Post>(Post);
 
-    const post = await repository.findOne(req.params.id, { relations: ['user', 'comments', 'comments.user'] });
+    const post = await repository.findOne(req.params.id, {
+      relations: ['user', 'comments', 'comments.user', 'likes', 'likes.user'],
+    });
 
     if (!post) {
       return next(createHttpError(404, 'Post not found'));
@@ -195,6 +197,7 @@ export const storeComment: RequestHandler = async (req: Request, res: Response, 
       comment: savedComment,
     });
   } catch (error) {
+    console.log(error);
     next(createHttpError(500, 'There was a problem on our side'));
   }
 };

@@ -1,7 +1,7 @@
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, OneToMany, BeforeInsert } from 'typeorm';
 import bcrypt from 'bcrypt';
-import { Post } from './post';
-import { Comment } from './comment';
+import { Post, Comment, Like } from '.';
+import { Follow } from './follow';
 
 @Entity({ name: 'users' })
 export class User {
@@ -35,11 +35,30 @@ export class User {
   @CreateDateColumn()
   createdAt!: Date;
 
-  @OneToMany((type) => Post, (post) => post.user)
+  @OneToMany((type) => Post, (post) => post.user, {
+    cascade: true,
+  })
   posts!: Post[];
 
-  @OneToMany((type) => Comment, (comment) => comment.user)
+  @OneToMany((type) => Comment, (comment) => comment.user, {
+    cascade: true,
+  })
   comments!: Comment[];
+
+  @OneToMany((type) => Like, (like) => like.user, {
+    cascade: true,
+  })
+  likes!: Like[];
+
+  @OneToMany((type) => Follow, (follow) => follow.followedBy, {
+    cascade: true,
+  })
+  followers!: Follow[];
+
+  @OneToMany((type) => Follow, (follow) => follow.followedTo, {
+    cascade: true,
+  })
+  followings!: Follow[];
 
   @BeforeInsert()
   async hashPassword(): Promise<void> {

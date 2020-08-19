@@ -1,6 +1,5 @@
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, ManyToOne, OneToMany } from 'typeorm';
-import { User } from './user';
-import { Comment } from './comment';
+import { User, Comment, Like } from '.';
 
 @Entity({ name: 'posts' })
 export class Post {
@@ -19,9 +18,18 @@ export class Post {
   @CreateDateColumn()
   createdAt!: Date;
 
-  @ManyToOne((type) => User, (user) => user.posts)
+  @ManyToOne((type) => User, (user) => user.posts, {
+    onDelete: 'CASCADE',
+  })
   user!: User;
 
-  @OneToMany((type) => Comment, (comment) => comment.post)
+  @OneToMany((type) => Comment, (comment) => comment.post, {
+    cascade: true,
+  })
   comments!: Comment[];
+
+  @OneToMany((type) => Like, (like) => like.post, {
+    cascade: true,
+  })
+  likes!: Like[];
 }

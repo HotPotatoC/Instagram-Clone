@@ -18,11 +18,10 @@ export const validationSchemas = {
     username: Joi.string().max(32).required(),
     email: Joi.string().email().lowercase().required(),
     password: Joi.string().min(6).required(),
-    avatarImg: Joi.required(),
     bio: Joi.string().default(''),
     website: Joi.string().uri().default(''),
     location: Joi.string().default(''),
-  }).xor('username', 'email'),
+  }).allow('avatarImg'),
   verify: Joi.object({
     refreshToken: Joi.string().required(),
   }),

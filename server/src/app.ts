@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
+import compression from 'compression';
 import { Connection } from 'typeorm';
 
 import config from './config';
@@ -18,6 +19,7 @@ connectDatabase().then(async (connection: Connection) => {
   const app: express.Application = express();
 
   app.use(cors());
+  app.use(compression());
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
 

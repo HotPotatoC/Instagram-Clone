@@ -1,8 +1,9 @@
 import { Request, Response, RequestHandler, NextFunction } from 'express';
 import { getRepository } from 'typeorm';
 import Joi from 'joi';
-import { User } from '../entities';
-import createHttpError from '../utils/httpError';
+
+import { User } from '../../entities';
+import createHttpError from '../../utils/httpError';
 
 export const validationSchemas = {
   update: Joi.object({
