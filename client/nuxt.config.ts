@@ -1,4 +1,6 @@
-export default {
+import { NuxtConfig } from '@nuxt/types'
+
+export const config: NuxtConfig = {
   /*
    ** Nuxt rendering mode
    ** See https://nuxtjs.org/api/configuration-mode
@@ -116,3 +118,5 @@ export default {
     color: '#63B3ED',
   },
 }
+
+export default config
