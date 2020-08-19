@@ -109,7 +109,6 @@ export const followUser: RequestHandler = async (req: Request, res: Response, ne
       message: 'Successfully followed a user',
     });
   } catch (error) {
-    console.log(error);
     next(createHttpError(500, 'There was a problem on our side'));
   }
 };
