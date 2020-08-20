@@ -27,7 +27,15 @@ connectDatabase().then(async (connection: Connection) => {
     app.use(morgan('dev'));
   }
 
-  app.use('/', router);
+  // Register routes
+  router.map((route) => {
+    if (route.middlewares) {
+      app[route.method](route.path, route.middlewares, route.controller);
+    } else {
+      app[route.method](route.path, route.controller);
+    }
+  });
+
   app.use(express.static('public'));
 
   app.use(error);
