@@ -26,7 +26,6 @@ if (validate.error) {
 }
 
 const options = {
-  port: process.env.PORT,
   storageDir: path.normalize(path.join(__dirname, '../../public/uploads')),
   jwt: {
     accessTokenSecret: process.env.ACCESS_TOKEN_SECRET,
