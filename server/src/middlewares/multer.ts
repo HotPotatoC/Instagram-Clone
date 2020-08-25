@@ -17,7 +17,7 @@ export const upload = multer({
     fileSize: 32 * 1024 * 1024 * 1024, // 32MB Max file size
   },
   fileFilter: (req, file, cb) => {
-    if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
+    if (!file.originalname.match(/\.(jpg|JPG|jpeg|JPEG|png|PNG)$/)) {
       return cb(createHttpError(422, 'Only image files are allowed [jpg, jpeg, png]'));
     }
 

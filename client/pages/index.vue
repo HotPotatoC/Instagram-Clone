@@ -7,15 +7,15 @@
           <PostsPlaceholder v-for="n in 10" :key="n" class="mb-10" />
         </div>
       </div>
-      <div v-else class="flex flex-wrap">
+      <div v-else class="flex flex-col md:flex-row-reverse">
+        <div class="w-full mb-10 md:mb-0 md:pl-4 md:w-1/3">
+          <ProfileCard v-if="$auth.loggedIn" />
+          <AuthCard v-else />
+        </div>
         <div class="w-full md:w-2/3">
           <div v-for="post in posts" :key="post.id" class="mb-10">
             <PostCard :post="post" @refresh-posts="$fetch()" />
           </div>
-        </div>
-        <div class="pl-4 hidden md:block md:w-1/3">
-          <ProfileCard v-if="$auth.loggedIn" />
-          <AuthCard v-else />
         </div>
       </div>
     </Container>

@@ -2,9 +2,9 @@
   <Fragment>
     <Container class="mt-24">
       <div class="flex justify-center items-center">
-        <div class="w-3/6">
-          <div class="bg-white border rounded-lg p-6">
-            <h1 class="text-center text-4xl">Instagram</h1>
+        <div class="w-full md:w-3/6">
+          <div class="bg-white border rounded-lg p-4 md:p-6">
+            <h1 class="text-center text-2xl md:text-4xl">Instagram</h1>
             <form class="mt-8" @submit.prevent="login">
               <input
                 id="username"

@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full fixed z-50 top-0 py-2 bg-white border-b">
+  <div class="w-full fixed z-10 top-0 py-2 bg-white border-b">
     <Container>
       <div class="flex justify-between items-center">
         <nuxt-link to="/">

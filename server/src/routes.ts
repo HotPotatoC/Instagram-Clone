@@ -23,7 +23,7 @@ const authRoutes: Array<RouteProps> = [
   {
     path: '/auth/register',
     method: 'post',
-    middlewares: [upload.single('avatar'), joiMiddleware(auth.validationSchemas.register, 'body')],
+    middlewares: [upload.single('avatarImg'), joiMiddleware(auth.validationSchemas.register, 'body')],
     controller: auth.register,
   },
   {
@@ -78,6 +78,11 @@ const userRoutes: Array<RouteProps> = [
     method: 'post',
     middlewares: authorized,
     controller: users.unfollowUser,
+  },
+  {
+    path: '/users/:username/posts',
+    method: 'get',
+    controller: users.userPosts,
   },
 ];
 

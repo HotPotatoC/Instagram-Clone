@@ -18,5 +18,22 @@ export interface Post {
   image: string
   location: string
   user: User
+  comments: Comment[]
+  likes: Like[]
+  createdAt: Date
+}
+
+export interface Comment {
+  id: string
+  content: string
+  post: Post
+  createdAt: Date
+}
+
+export interface Like {
+  id: string
+  userId: string
+  user: User
+  post: Post
   createdAt: Date
 }

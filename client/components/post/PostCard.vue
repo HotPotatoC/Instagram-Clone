@@ -23,17 +23,42 @@
     </nuxt-link>
     <div class="flex justify-between items-center p-4">
       <div class="flex justify-between items-center space-x-4">
-        <HeartIcon />
-        <MessageCircleIcon />
+        <button v-if="!isLiked" @click="likePost">
+          <HeartIcon />
+        </button>
+        <button v-else @click="unlikePost">
+          <HeartIcon class="text-red-600 fill-current" />
+        </button>
+        <nuxt-link :to="`/post/${post.id}`">
+          <MessageCircleIcon />
+        </nuxt-link>
         <SendIcon />
       </div>
       <BookmarkIcon></BookmarkIcon>
     </div>
+    <div class="px-4">
+      <p
+        v-if="post.likes.length > 0 && post.likes.length === 1"
+        class="font-bold break-words"
+      >
+        {{ post.likes.length }} Like
+      </p>
+      <p
+        v-else-if="post.likes.length > 0 && post.likes.length > 1"
+        class="font-bold break-words"
+      >
+        {{ post.likes.length }} Likes
+      </p>
+    </div>
     <div class="px-4 pt-1 pb-2">
       <p class="break-words">
-        <span class="font-semibold mr-2">{{ post.user.username }}</span>
-        <span v-if="isExpanded">{{ post.caption }}</span>
-        <span v-else
+        <nuxt-link :to="`/${post.user.username}`">
+          <span class="font-semibold mr-2">{{ post.user.username }}</span>
+        </nuxt-link>
+        <span v-if="isExpanded || post.caption.length < 20">{{
+          post.caption
+        }}</span>
+        <span v-else-if="!isExpanded && post.caption.length > 20"
           >{{ postCaption }}
           <button
             class="bg-transparent focus:outline-none text-gray-600"
@@ -47,7 +72,10 @@
     <div v-if="post.comments.length > 0" class="w-full px-4 pb-2">
       <div v-for="comment in post.comments" :key="comment.id" class="my-2">
         <p class="break-words">
-          <span class="font-semibold mr-2">{{ comment.user.username }}</span
+          <nuxt-link :to="`/${comment.user.username}`">
+            <span class="font-semibold mr-2">{{
+              comment.user.username
+            }}</span> </nuxt-link
           >{{ comment.content }}
         </p>
       </div>
@@ -117,6 +145,7 @@ export default Vue.extend({
       commentContent: '',
       error: '',
       isExpanded: false,
+      isLiked: false,
     }
   },
   computed: {
@@ -126,6 +155,19 @@ export default Vue.extend({
         : this.post.caption
     },
   },
+  async mounted() {
+    if (this.$auth.loggedIn) {
+      const isLiked = await this.post.likes.some(
+        (like) => like.userId === this.$auth.user.id
+      )
+
+      if (isLiked) {
+        this.isLiked = true
+      } else {
+        this.isLiked = false
+      }
+    }
+  },
   methods: {
     async postComment() {
       try {
@@ -133,7 +175,7 @@ export default Vue.extend({
           content: this.commentContent,
         })
 
-        this.$emit('refresh-posts')
+        this.$emit('refresh-post')
       } catch (error) {
         if (error.response.status === 422) {
           this.error = error.response.data.message
@@ -141,6 +183,25 @@ export default Vue.extend({
         }
         this.error = 'There was a problem posting a comment, Try again later.'
       }
+    },
+    async likePost() {
+      try {
+        if (!this.$auth.loggedIn) {
+          return this.$router.push('/login')
+        }
+        await this.$axios.post(`/posts/${this.post.id}/favorite`)
+
+        this.isLiked = true
+        this.$emit('refresh-post')
+      } catch (error) {}
+    },
+    async unlikePost() {
+      try {
+        await this.$axios.post(`/posts/${this.post.id}/unfavorite`)
+
+        this.isLiked = false
+        this.$emit('refresh-post')
+      } catch (error) {}
     },
     expand() {
       this.isExpanded = !this.isExpanded

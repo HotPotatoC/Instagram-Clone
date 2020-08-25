@@ -4,7 +4,7 @@ import { User, Comment, Like } from '.';
 @Entity({ name: 'posts' })
 export class Post {
   @PrimaryGeneratedColumn('uuid')
-  id!: number;
+  id!: string;
 
   @Column({ type: 'varchar' })
   image!: string;

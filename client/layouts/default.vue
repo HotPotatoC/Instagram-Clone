@@ -1,5 +1,8 @@
 <template>
-  <Nuxt />
+  <div>
+    <portal-target name="modal-outlet"></portal-target>
+    <Nuxt />
+  </div>
 </template>
 
 <style>

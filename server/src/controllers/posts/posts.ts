@@ -32,10 +32,20 @@ export const index: RequestHandler = async (req: Request, res: Response, next: N
     const repository = getRepository<Post>(Post);
 
     const posts = await repository.find({
-      relations: ['user', 'comments', 'comments.user', 'likes'],
+      relations: ['user', 'comments', 'comments.user', 'likes', 'likes.user'],
       order: {
         createdAt: 'DESC',
       },
+    });
+
+    posts.map((post) => {
+      Object.assign(post, {
+        likes: [
+          ...post.likes.map((like) => ({
+            userId: like.user.id,
+          })),
+        ],
+      });
     });
 
     res.json({
@@ -43,6 +53,7 @@ export const index: RequestHandler = async (req: Request, res: Response, next: N
       items: posts,
     });
   } catch (error) {
+    console.log(error);
     next(createHttpError(500, 'There was a problem on our side'));
   }
 };
@@ -63,6 +74,14 @@ export const show: RequestHandler = async (req: Request, res: Response, next: Ne
     if (!post) {
       return next(createHttpError(404, 'Post not found'));
     }
+
+    Object.assign(post, {
+      likes: [
+        ...post.likes.map((like) => ({
+          userId: like.user.id,
+        })),
+      ],
+    });
 
     res.json(post);
   } catch (error) {

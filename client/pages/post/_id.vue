@@ -6,7 +6,7 @@
         <PostsPlaceholder />
       </div>
       <div v-else class="w-full">
-        <PostCard :post="post" @refresh-posts="$fetch()" />
+        <PostCard :post="post" @refresh-post="$fetch()" />
       </div>
     </Container>
   </Fragment>

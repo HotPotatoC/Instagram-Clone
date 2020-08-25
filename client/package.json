@@ -7,8 +7,7 @@
     "build": "nuxt-ts build",
     "start": "nuxt-ts start",
     "generate": "nuxt-ts generate",
-    "lint:js": "eslint --ext .js,.vue --ignore-path .gitignore .",
-    "lint": "yarn lint:js"
+    "lint": "eslint --ext .ts,.js,.vue --ignore-path .gitignore ."
   },
   "dependencies": {
     "@braintree/sanitize-url": "^4.1.1",
@@ -18,6 +17,7 @@
     "@nuxtjs/axios": "^5.12.0",
     "@nuxtjs/pwa": "^3.0.0-beta.20",
     "nuxt": "^2.14.0",
+    "portal-vue": "^2.1.7",
     "vue-content-placeholders": "^0.2.1",
     "vue-feather-icons": "^5.0.0",
     "vue-fragment": "^1.5.1",
