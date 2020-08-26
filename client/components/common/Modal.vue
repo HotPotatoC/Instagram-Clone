@@ -27,7 +27,9 @@
                   <XIcon />
                 </button>
               </div>
-              <div class="mt-2 overflow-y-auto overflow-x-hidden break-words">
+              <div
+                class="mt-2 box-border overflow-y-auto overflow-x-hidden break-words"
+              >
                 <slot></slot>
               </div>
             </div>
@@ -56,6 +58,13 @@ export default Vue.extend({
       type: Boolean,
       required: true,
     },
+  },
+  mounted() {
+    window.addEventListener('keyup', (ev) => {
+      if (this.show && ev.keyCode === 27) {
+        this.$emit('close')
+      }
+    })
   },
 })
 </script>

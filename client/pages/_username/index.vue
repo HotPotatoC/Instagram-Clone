@@ -1,53 +1,21 @@
 <template>
   <div>
     <Navbar />
-    <Modal :show="isShowFollowersModal" @close="toggleFollowersModal">
-      <template slot="title">
-        <span class="font-semibold"> {{ user.username }} </span>'s followers
-      </template>
-
-      <div
-        v-for="follower in followers.items"
-        :key="follower.followedBy.id"
-        class="flex justify-between items-center p-4"
-      >
-        <nuxt-link
-          :to="`/${follower.followedBy.username}`"
-          class="flex justify-between items-center space-x-6"
-        >
-          <img
-            class="rounded-full h-12 object-cover"
-            :src="`${$config.storageURL}${follower.followedBy.avatarImg}`"
-            :alt="follower.followedBy.username"
-          />
-          <p class="text-base">{{ follower.followedBy.username }}</p>
-        </nuxt-link>
-        <MoreHorizontalIcon />
-      </div>
-    </Modal>
-    <Modal :show="isShowFollowingModal" @close="toggleFollowingModal">
-      <template slot="title">
-        <span class="font-semibold"> {{ user.username }} </span>'s followings
-      </template>
-      <div
-        v-for="following in followings.items"
-        :key="following.followedTo.id"
-        class="flex justify-between items-center p-4"
-      >
-        <nuxt-link
-          :to="`/${following.followedTo.username}`"
-          class="flex justify-between items-center space-x-6"
-        >
-          <img
-            class="rounded-full h-12 object-cover"
-            :src="`${$config.storageURL}${following.followedTo.avatarImg}`"
-            :alt="following.followedTo.username"
-          />
-          <p class="text-base">{{ following.followedTo.username }}</p>
-        </nuxt-link>
-        <MoreHorizontalIcon />
-      </div>
-    </Modal>
+    <FollowersModal
+      v-if="!$fetchState.pending"
+      :show="isShowFollowersModal"
+      :followers="followers"
+      :followings="followings.items"
+      :user="user"
+      @close-followers-modal="toggleFollowersModal"
+    />
+    <FollowingsModal
+      v-if="!$fetchState.pending"
+      :show="isShowFollowingsModal"
+      :followings="followings"
+      :user="user"
+      @close-followings-modal="toggleFollowingsModal"
+    />
     <Container class="mt-24">
       <div class="flex flex-wrap">
         <Fragment v-if="$fetchState.pending">
@@ -64,10 +32,11 @@
             <ProfileDetails
               :user="user"
               :total-posts="posts.total_records"
-              :total-followers="followers.total_records"
-              :total-following="followings.total_records"
+              :followers="followers"
+              :followings="followings"
               @toggle-followers-modal="toggleFollowersModal"
-              @toggle-following-modal="toggleFollowingModal"
+              @toggle-following-modal="toggleFollowingsModal"
+              @refresh-user-details="$fetch()"
             />
           </div>
           <hr class="w-full mt-32 border border-gray-400" />
@@ -85,6 +54,9 @@ import Vue from 'vue'
 // @ts-ignore
 import { Fragment } from 'vue-fragment'
 
+import FollowersModal from '~/components/profile/FollowersModal.vue'
+import FollowingsModal from '~/components/profile/FollowingsModal.vue'
+
 import ProfileDetails from '~/components/profile/ProfileDetails.vue'
 import ProfilePosts from '~/components/profile/ProfilePosts.vue'
 
@@ -94,6 +66,8 @@ import ProfileDetailsPlaceholder from '~/components/profile/Placeholders/Profile
 export default Vue.extend({
   components: {
     Fragment,
+    FollowersModal,
+    FollowingsModal,
     ProfileDetails,
     ProfilePosts,
     ProfilePostsPlaceholder,
@@ -131,7 +105,7 @@ export default Vue.extend({
       followers: [],
       followings: [],
       isShowFollowersModal: false,
-      isShowFollowingModal: false,
+      isShowFollowingsModal: false,
     }
   },
   activated() {
@@ -143,8 +117,8 @@ export default Vue.extend({
     toggleFollowersModal() {
       this.isShowFollowersModal = !this.isShowFollowersModal
     },
-    toggleFollowingModal() {
-      this.isShowFollowingModal = !this.isShowFollowingModal
+    toggleFollowingsModal() {
+      this.isShowFollowingsModal = !this.isShowFollowingsModal
     },
   },
   head() {

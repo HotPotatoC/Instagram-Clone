@@ -27,6 +27,9 @@ export const userPosts: RequestHandler = async (req: Request, res: Response, nex
     const posts = await postRepository.find({
       relations: ['user', 'comments', 'comments.user', 'likes', 'likes.user'],
       where: { user },
+      order: {
+        createdAt: 'DESC',
+      },
     });
 
     res.json({

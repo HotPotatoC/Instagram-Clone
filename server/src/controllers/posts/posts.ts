@@ -11,7 +11,7 @@ import { Comment } from '../../entities/comment';
 export const validationSchemas = {
   store: Joi.object({
     caption: Joi.string().max(300).required(),
-    location: Joi.string().required(),
+    location: Joi.string().default(''),
   }).allow('image'),
   storeComment: Joi.object({
     content: Joi.string().max(300).required(),
@@ -113,7 +113,7 @@ export const store: RequestHandler = async (req: Request, res: Response, next: N
 
     const savedPost = await postRepository.save(newPost);
 
-    return res.json({
+    return res.status(201).json({
       message: 'Successfully posted a new post',
       post: savedPost,
     });
@@ -147,7 +147,7 @@ export const update: RequestHandler = async (req: Request, res: Response, next: 
       location,
     });
 
-    res.json({
+    res.status(201).json({
       message: `Successfully updated ${updatedPost.affected} post`,
     });
   } catch (error) {
@@ -211,7 +211,7 @@ export const storeComment: RequestHandler = async (req: Request, res: Response, 
 
     const savedComment = await commentRepository.save(newComment);
 
-    res.json({
+    res.status(201).json({
       message: 'Successfully posted a new comment',
       comment: savedComment,
     });

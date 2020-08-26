@@ -87,26 +87,22 @@
     </div>
     <div v-if="$auth.loggedIn">
       <form class="p-4" @submit.prevent="postComment">
-        <div class="flex justify-between items-center">
-          <div class="w-4/6 lg:w-5/6">
-            <input
-              v-model="commentContent"
-              class="w-full"
-              name="comment"
-              type="text"
-              placeholder="Add a comment..."
-            />
-          </div>
-          <div class="w-2/6 lg:w-1/6">
-            <Button native-type="submit">
-              <div class="flex justify-between sm:space-x-4">
-                <SendIcon class="hidden sm:block" />
-                <p>
-                  Send
-                </p>
-              </div>
-            </Button>
-          </div>
+        <div class="flex flex-col sm:flex-row sm:justify-between items-center">
+          <input
+            v-model="commentContent"
+            class="w-full"
+            name="comment"
+            type="text"
+            placeholder="Add a comment..."
+          />
+          <Button native-type="submit">
+            <div class="flex justify-between sm:space-x-4">
+              <SendIcon class="hidden sm:block" />
+              <p>
+                Send
+              </p>
+            </div>
+          </Button>
         </div>
         <small class="text-red-400">{{ error }}</small>
       </form>

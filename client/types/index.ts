@@ -33,7 +33,17 @@ export interface Comment {
 export interface Like {
   id: string
   userId: string
-  user: User
-  post: Post
+  createdAt: Date
+}
+
+export interface Follower {
+  id: string
+  followedBy: User
+  createdAt: Date
+}
+
+export interface Following {
+  id: string
+  followedTo: User
   createdAt: Date
 }

@@ -1,8 +1,9 @@
 <template>
   <button
-    class="w-full px-4 py-2 font-medium rounded duration-75"
-    :class="[bgColor, `hover:${bgHoverColor}`, textColor, border]"
+    class="px-4 py-2 font-medium rounded duration-75"
+    :class="btnClasses"
     :type="nativeType"
+    :disabled="disabled"
     @click="$emit('click')"
   >
     <slot></slot>
@@ -34,6 +35,23 @@ export default Vue.extend({
     border: {
       type: String,
       default: null,
+    },
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
+  },
+  computed: {
+    btnClasses() {
+      if (this.disabled) {
+        return ['bg-gray-400', 'text-gray-600', 'cursor-not-allowed']
+      }
+      return [
+        this.bgColor,
+        `hover:${this.bgHoverColor}`,
+        this.textColor,
+        this.border,
+      ]
     },
   },
 })

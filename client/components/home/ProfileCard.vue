@@ -8,9 +8,13 @@
       />
       <h1 class="text-xl m-4">{{ $auth.user.username }}</h1>
       <nuxt-link :to="`/${$auth.user.username}`">
-        <Button class="mt-6 mb-4">Go to profile</Button>
+        <Button class="w-full mt-6 mb-4">Go to profile</Button>
       </nuxt-link>
-      <Button bg-color="bg-red-400" bg-hover-color="bg-red-500" @click="logout"
+      <Button
+        class="w-full"
+        bg-color="bg-red-400"
+        bg-hover-color="bg-red-500"
+        @click="logout"
         >Logout</Button
       >
     </div>

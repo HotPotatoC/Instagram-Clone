@@ -42,8 +42,8 @@ export default Vue.extend({
     PostsPlaceholder,
   },
   async fetch() {
-    const posts = await this.$axios.get('/posts')
-    this.posts = posts.data.items
+    await this.$store.dispatch('post/fetchPosts')
+    this.posts = this.$store.getters['post/posts']
   },
   data() {
     return {
